@@ -19,5 +19,11 @@
 			get;
 			set;
 		}
+
+		public string ReturnedJSon
+		{
+			get;
+			set;
+		}
 	}
 }

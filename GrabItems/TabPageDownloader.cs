@@ -25,12 +25,14 @@ namespace GrabItems
 				var processResult = ProcessQueue();
 				if (processResult.Status == ProcessStatus.Wait)
 				{
+					Console.WriteLine("Error:\r\n{0}", processResult.ReturnedJSon);
 					Console.WriteLine("Request limit exceeded. Readding {0} to process queue, and waiting 1 minute, before resuming.", processResult.Index);
 					Thread.Sleep(60*1000);
 				}
 
 				if (processResult.Status == ProcessStatus.Ok)
 				{
+					SaveToDisk(processResult.ReturnedJSon, processResult.Index);
 					Console.WriteLine("Process {0} sucessfully.", processResult.Index);
 				}
 			}
@@ -59,7 +61,8 @@ namespace GrabItems
 				{
 					Status = ProcessStatus.Wait,
 					Index = spec.Index,
-					Model = model
+					Model = model,
+					ReturnedJSon = result,
 				};
 			}
 
@@ -67,7 +70,8 @@ namespace GrabItems
 			{
 				Status = ProcessStatus.Ok,
 				Index = spec.Index,
-				Model = model
+				Model = model,
+				ReturnedJSon = result,
 			};
 		}
 
