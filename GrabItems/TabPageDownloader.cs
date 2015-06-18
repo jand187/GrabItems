@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -93,9 +94,18 @@ namespace GrabItems
 			message.Headers.Add("X-Requested-With", "XMLHttpRequest");
 			message.Headers.Add("Connection", "keep-alive");
 
-			var content = string.Format("league=Standard&tabs=0&tabIndex={0}&accountName=PowerGNU", tabIndex);
+			var content = String.Format("league=Standard&tabs=0&tabIndex={0}&accountName=PowerGNU", tabIndex);
 			message.Content = new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded");
 			return message;
+		}
+
+		private static void SaveToDisk(string result, int index)
+		{
+			var filename = String.Format("tab{0}.json", index);
+			using (var writer = File.CreateText(Path.Combine(@"C:\Users\jda\Documents\Data", filename)))
+			{
+				writer.Write(result);
+			}
 		}
 	}
 }
