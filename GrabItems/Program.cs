@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -13,27 +15,38 @@ namespace GrabItems
 		{
 			var initialMessage = CreateRequestMessage(0);
 			var initialResult = GetResult(initialMessage);
-			SaveToDisk(initialResult, 0);
-
 			var initianModel = JsonConvert.DeserializeObject<TabModel>(initialResult);
 
-			for (var index = 1; index < initianModel.NumberOfTabs; index++)
-			{
-				var message = CreateRequestMessage(index);
-				var result = GetResult(message);
-				var model = JsonConvert.DeserializeObject<TabModel>(result);
+			var numberOfTabs = initianModel.NumberOfTabs;
 
-				if (model.Error != null || model.NumberOfTabs == 0)
-				{
-					Thread.Sleep(60*1000);
-					result = GetResult(message);
-				}
 
-				SaveToDisk(result, index);
+			var downloader = new TabPageDownloader();
+			downloader.Start(0);
 
-				Console.WriteLine("tab{0}.json, written to disk", index);
-				//Thread.Sleep(500);
-			}
+
+			//var initialMessage = CreateRequestMessage(0);
+			//var initialResult = GetResult(initialMessage);
+			//SaveToDisk(initialResult, 0);
+
+			//var initianModel = JsonConvert.DeserializeObject<TabModel>(initialResult);
+
+			//for (var index = 1; index < initianModel.NumberOfTabs; index++)
+			//{
+			//	var message = CreateRequestMessage(index);
+			//	var result = GetResult(message);
+			//	var model = JsonConvert.DeserializeObject<TabModel>(result);
+
+			//	if (model.Error != null || model.NumberOfTabs == 0)
+			//	{
+			//		Thread.Sleep(60*1000);
+			//		result = GetResult(message);
+			//	}
+
+			//	SaveToDisk(result, index);
+
+			//	Console.WriteLine("tab{0}.json, written to disk", index);
+			//	//Thread.Sleep(500);
+			//}
 
 			Console.ReadKey();
 		}
